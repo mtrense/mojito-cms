@@ -22,18 +22,7 @@ class TwoColumns < Mojito::CMS::Container
 end
 
 Mojito::CMS::Delivery.rendering TwoColumns, as: :html do |cmp|
-	template :erb, <<-HTML, cmp: cmp
-		<div class="left">
-			<% cmp.left.components.each do |c| %>
-				<%= render c %>
-			<% end %>
-		</div>
-		<div class="right">
-			<% cmp.right.components.each do |c| %>
-				<%= render c %>
-			<% end %>
-		</div>
-		HTML
+	template 'simple_two_columns.html.erb', cmp: cmp
 end
 
 class LandingPage < Mojito::CMS::Page
@@ -45,27 +34,7 @@ end
 
 Mojito::CMS::Delivery.rendering LandingPage, as: :html do |cmp|
 	content_type :html
-	template :erb, <<-HTML, cmp: cmp
-	<!DOCTYPE html>
-	<html>
-	<head>
-		<meta charset=utf-8 />
-		<title><%= cmp.title %></title>
-	</head>
-	<body>
-		<div class="center">
-			<% cmp.center.components.each do |c| %>
-				<%= render c %>
-			<% end %>
-		</div>
-		<div class="sidebar">
-			<% cmp.sidebar.components.each do |c| %>
-				<%= render c %>
-			<% end %>
-		</div>
-	</body>
-	</html>
-	HTML
+	template 'simple_landing_page.html.erb', cmp: cmp
 end
 
 def generate_test_content

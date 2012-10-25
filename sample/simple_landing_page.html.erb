@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=utf-8 />
+	<title><%= cmp.title %></title>
+</head>
+<body>
+	<div class="center">
+		<% cmp.center.components.each do |c| %>
+			<%= render c %>
+		<% end %>
+	</div>
+	<div class="sidebar">
+		<% cmp.sidebar.components.each do |c| %>
+			<%= render c %>
+		<% end %>
+	</div>
+</body>
+</html>
