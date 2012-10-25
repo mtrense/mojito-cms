@@ -19,6 +19,14 @@ module Mojito::CMS
 			self.path = self.ancestors_and_self.collect(&:name).join('/')
 		end
 		
+		def traverse(depth = 0, &visitor)
+			visitor.call self, depth
+			children.each do |node|
+				node.traverse depth + 1, &visitor
+			end
+			self
+		end
+		
 		before_destroy :destroy_children
 		
 		def to_s
