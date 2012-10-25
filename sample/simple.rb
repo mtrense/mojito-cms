@@ -10,6 +10,10 @@ class PlainText < Mojito::CMS::Component
 	
 end
 
+Mojito::CMS::Delivery.rendering PlainText, as: :html do |cmp|
+	template 'simple_plain_text.html.erb', cmp: cmp
+end
+
 class TwoColumns < Mojito::CMS::Container
 	
 	area :left
@@ -17,11 +21,51 @@ class TwoColumns < Mojito::CMS::Container
 	
 end
 
+Mojito::CMS::Delivery.rendering TwoColumns, as: :html do |cmp|
+	template :erb, <<-HTML, cmp: cmp
+		<div class="left">
+			<% cmp.left.components.each do |c| %>
+				<%= render c %>
+			<% end %>
+		</div>
+		<div class="right">
+			<% cmp.right.components.each do |c| %>
+				<%= render c %>
+			<% end %>
+		</div>
+		HTML
+end
+
 class LandingPage < Mojito::CMS::Page
 	
 	area :center
 	area :sidebar
 	
+end
+
+Mojito::CMS::Delivery.rendering LandingPage, as: :html do |cmp|
+	content_type :html
+	template :erb, <<-HTML, cmp: cmp
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<meta charset=utf-8 />
+		<title><%= cmp.title %></title>
+	</head>
+	<body>
+		<div class="center">
+			<% cmp.center.components.each do |c| %>
+				<%= render c %>
+			<% end %>
+		</div>
+		<div class="sidebar">
+			<% cmp.sidebar.components.each do |c| %>
+				<%= render c %>
+			<% end %>
+		</div>
+	</body>
+	</html>
+	HTML
 end
 
 def generate_test_content
@@ -34,6 +78,7 @@ def generate_test_content
 	tc.right.components << PlainText.create(text: 'Hello World 4')
 	
 	root = NavigationNode.create name: 'main', page: lp1
+	root.children << NavigationNode.create(name: 'index', page: lp1)
 	root.children << NavigationNode.create(name: 'projects')
 	
 	lp1
