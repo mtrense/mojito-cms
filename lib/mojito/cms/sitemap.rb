@@ -4,30 +4,25 @@ module Mojito::CMS
 	
 	class NavigationNode
 		include Mongoid::Document
-		
-		belongs_to :parent, class_name: 'Mojito::CMS::NavigationNode', inverse_of: :children
-		has_many :children, class_name: 'Mojito::CMS::NavigationNode', inverse_of: :parent
+		include Mongoid::Tree
+		include Mongoid::Tree::Ordering
 		
 		field :name, type: String
+		field :menu_name, type: String
 		field :path, type: String
 		
 		belongs_to :page
 		field :reference, type: String
 		
-		before_save do
+		after_rearrange do
+			self.menu_name = self.parent ? self.parent.menu_name : self.name
 			self.path = self.parent ? self.parent.path / self.name : '/'
 		end
 		
-		def traverse(depth = 0, &visitor)
-			visitor.call self, depth
-			children.each do |node|
-				node.traverse depth + 1, &visitor
-			end
-			self
-		end
+		before_destroy :destroy_children
 		
 		def to_s
-			(children.empty? ? '- ' : '+ ') + "#{name}"
+			(leaf? ? '- ' : '+ ') + "#{name}"
 		end
 		
 	end
