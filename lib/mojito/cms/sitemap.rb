@@ -15,8 +15,8 @@ module Mojito::CMS
 		field :reference, type: String
 		
 		after_rearrange do
-			self.menu_name = self.parent ? self.parent.menu_name : self.name
-			self.path = self.parent ? self.parent.path / self.name : '/'
+			self.menu_name = self.root.menu_name
+			self.path = self.ancestors_and_self.collect(&:name).join('/')
 		end
 		
 		before_destroy :destroy_children

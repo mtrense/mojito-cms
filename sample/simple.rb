@@ -46,7 +46,7 @@ def generate_test_content
 	tc.right.components << PlainText.create(text: 'Hello World 3')
 	tc.right.components << PlainText.create(text: 'Hello World 4')
 	
-	root = NavigationNode.create name: 'main', page: lp1
+	root = NavigationNode.create menu_name: 'main', page: lp1
 	root.children << NavigationNode.create(name: 'index', page: lp1)
 	root.children << NavigationNode.create(name: 'projects')
 	
