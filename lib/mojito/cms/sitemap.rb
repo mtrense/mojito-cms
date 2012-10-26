@@ -14,6 +14,12 @@ module Mojito::CMS
 		belongs_to :page
 		field :reference, type: String
 		
+		field :title, type: String
+		
+		def title
+			self[:title] || (page ? page.title : nil)
+		end
+		
 		after_rearrange do
 			self.menu_name = self.root.menu_name
 			self.path = self.parent ? self.ancestors_and_self.collect(&:name).join('/') : '/'
