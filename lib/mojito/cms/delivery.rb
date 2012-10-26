@@ -18,12 +18,13 @@ module Mojito::CMS
 				ext = (@cms_extension || :html).to_sym
 				renderer = renderers[ext]
 				components.push component
-				if renderer
+				result = if renderer
 					instance_exec component, &renderer
 				elsif component.respond_to?("to_#{ext.to_s}".to_sym)
 					component.send "to_#{ext.to_s}".to_sym
 				end
 				components.pop
+				result
 			end
 		end
 		
