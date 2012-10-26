@@ -17,11 +17,13 @@ module Mojito::CMS
 			if renderers = self.class.renderers[component.class]
 				ext = (@cms_extension || :html).to_sym
 				renderer = renderers[ext]
+				components.push component
 				if renderer
 					instance_exec component, &renderer
 				elsif component.respond_to?("to_#{ext.to_s}".to_sym)
 					component.send "to_#{ext.to_s}".to_sym
 				end
+				components.pop
 			end
 		end
 		
@@ -46,6 +48,31 @@ module Mojito::CMS
 				not_found!
 			end
 			internal_server_error!
+		end
+		
+		##
+		# Returns the current NavigationNode or nil
+		def navigation
+			@navigation
+		end
+		
+		##
+		# Returns the page associated to the current NavigationNode or nil
+		def page
+			@navigation ? @navigation.page : nil
+		end
+		
+		##
+		# Returns a stack of components currently rendered. The first component (most often the page) 
+		# is at components.first, the one currently rendered is at components.last.
+		def components
+			@components ||= []
+		end
+		
+		##
+		# Returns the current component or nil if no component is rendered currently
+		def current_component
+			components.last
 		end
 		
 		module ClassMethods
