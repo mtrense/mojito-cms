@@ -32,12 +32,16 @@ module Mojito::CMS
 			/^(?<path>.+?)(?:\.(?<extension>[^.]+))?(?:$|\?)/ =~ request.path_info
 			@cms_path = path
 			@cms_extension = extension
-			node = Mojito::CMS::NavigationNode.where(menu_name: menu_name, path: path).first
-			if node and page = node.page
-				write render(page)
-				ok!
-			elsif reference = node.reference
-				redirect! reference
+			@navigation = Mojito::CMS::NavigationNode.where(menu_name: menu_name, path: path).first
+			if @navigation
+				if page = @navigation.page
+					write render(page)
+					ok!
+				elsif reference = @navigation.reference
+					redirect! reference
+				else
+					not_found!
+				end
 			else
 				not_found!
 			end
