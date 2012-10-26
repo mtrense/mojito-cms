@@ -16,7 +16,7 @@ module Mojito::CMS
 		
 		after_rearrange do
 			self.menu_name = self.root.menu_name
-			self.path = self.ancestors_and_self.collect(&:name).join('/')
+			self.path = self.parent ? self.ancestors_and_self.collect(&:name).join('/') : '/'
 		end
 		
 		def traverse(depth = 0, &visitor)
