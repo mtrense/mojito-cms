@@ -2,12 +2,17 @@
 
 module Mojito::CMS
 	
+	##
+	# Includes several utility-methods to access and render content as defined in Mojito::CMS.
 	module RenderingController
 		
 		def self.included(type)
 			type.extend ClassMethods
 		end
 		
+		##
+		# Render a component within the current context (which may be within another component)
+		# Provides access to the given component via current_component().
 		def render(component)
 			if renderers = self.class.renderers[component.class]
 				ext = (@cms_extension || :html).to_sym
@@ -20,6 +25,9 @@ module Mojito::CMS
 			end
 		end
 		
+		##
+		# Mounts the NavigationNode accessed by menu_name at the current URI. Called from the controller
+		# to delegate content-dispatching based on path to the given NavigationNode.
 		def mount_navigation(menu_name)
 			/^(?<path>.+?)(?:\.(?<extension>[^.]+))?(?:$|\?)/ =~ request.path_info
 			@cms_path = path
