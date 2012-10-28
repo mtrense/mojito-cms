@@ -6,12 +6,12 @@
 </head>
 <body>
   <div>Path: <%= navigation.path %></div>
-	<div class="center">
+	<div class="area center" id="<%= cmp.center.id %>">
 		<% cmp.center.components.each do |c| %>
 			<%= render c %>
 		<% end %>
 	</div>
-	<div class="sidebar">
+	<div class="area sidebar" id="<%= cmp.sidebar.id %>">
 		<% cmp.sidebar.components.each do |c| %>
 			<%= render c %>
 		<% end %>
