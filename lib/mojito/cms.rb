@@ -8,7 +8,7 @@ module Mojito
 	module CMS
 		require 'mojito/cms/components'
 		require 'mojito/cms/sitemap'
-		require 'mojito/cms/controllers'
+		require 'mojito/cms/controller'
 		
 	end
 	
