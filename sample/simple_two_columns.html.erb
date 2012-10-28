@@ -1,10 +1,2 @@
-<div class="area left" id="<%= cmp.left.id %>">
-	<% cmp.left.components.each do |c| %>
-		<%= render c %>
-	<% end %>
-</div>
-<div class="area right" id="<%= cmp.right.id %>">
-	<% cmp.right.components.each do |c| %>
-		<%= render c %>
-	<% end %>
-</div>
+<%= render cmp.left %>
+<%= render cmp.right %>
