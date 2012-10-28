@@ -14,27 +14,31 @@ module Mojito::CMS
 		# Render a component within the current context (which may be within another component)
 		# Provides access to the given component via current_component().
 		def render(component)
-			if renderers = self.class.renderers[component.class]
-				ext = (@cms_extension || :html).to_sym
-				renderer = renderers[ext]
-				case component
-				when Page
-					result = if renderer
-						instance_exec component, &renderer
-					elsif component.respond_to?("to_#{ext.to_s}".to_sym)
-						component.send "to_#{ext.to_s}".to_sym
+			case component
+			when Area
+				puts "area"
+				"<div class=\"area #{component.name}\" id=\"#{component.id}\">\n#{component.components.collect {|c| render c }.join("\n")}\n</div>"
+			when Component
+				if renderers = self.class.renderers[component.class]
+					ext = (@cms_extension || :html).to_sym
+					renderer = renderers[ext]
+					case component
+					when Page
+						if renderer
+							instance_exec component, &renderer
+						elsif component.respond_to?("to_#{ext.to_s}".to_sym)
+							component.send "to_#{ext.to_s}".to_sym
+						end
+					when Component
+						components.push component
+						result = if renderer
+							instance_exec component, &renderer
+						elsif component.respond_to?("to_#{ext.to_s}".to_sym)
+							component.send "to_#{ext.to_s}".to_sym
+						end
+						components.pop
+						result
 					end
-				when Area
-					
-				when Component
-					components.push component
-					result = if renderer
-						instance_exec component, &renderer
-					elsif component.respond_to?("to_#{ext.to_s}".to_sym)
-						component.send "to_#{ext.to_s}".to_sym
-					end
-					components.pop
-					result
 				end
 			end
 		end
