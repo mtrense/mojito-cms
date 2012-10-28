@@ -16,7 +16,6 @@ module Mojito::CMS
 		def render(component)
 			case component
 			when Area
-				puts "area"
 				"<div class=\"area #{component.name}\" id=\"#{component.id}\">\n#{component.components.collect {|c| render c }.join("\n")}\n</div>"
 			when Component
 				if renderers = self.class.renderers[component.class]
