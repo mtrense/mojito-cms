@@ -10,19 +10,11 @@ class PlainText < Mojito::CMS::Component
 	
 end
 
-Mojito::CMS::Delivery.rendering PlainText, as: :html do |cmp|
-	template 'simple_plain_text.html.erb', cmp: cmp
-end
-
 class TwoColumns < Mojito::CMS::Container
 	
 	area :left
 	area :right
 	
-end
-
-Mojito::CMS::Delivery.rendering TwoColumns, as: :html do |cmp|
-	template 'simple_two_columns.html.erb', cmp: cmp
 end
 
 class LandingPage < Mojito::CMS::Page
@@ -32,9 +24,34 @@ class LandingPage < Mojito::CMS::Page
 	
 end
 
-Mojito::CMS::Delivery.rendering LandingPage, as: :html do |cmp|
-	content_type :html
-	template 'simple_landing_page.html.erb', cmp: cmp
+class Delivery
+	include Mojito
+	controller :runtime
+	rendering :all
+		
+	include Mojito::CMS::RenderingController
+		
+	routes do
+				
+		on GET() do
+			mount_navigation 'main'
+		end
+				
+	end
+			
+	rendering PlainText, as: :html do |cmp|
+		template 'simple_plain_text.html.erb', cmp: cmp
+	end
+
+	rendering TwoColumns, as: :html do |cmp|
+		template 'simple_two_columns.html.erb', cmp: cmp
+	end
+
+	rendering LandingPage, as: :html do |cmp|
+		content_type :html
+		template 'simple_landing_page.html.erb', cmp: cmp
+	end
+
 end
 
 def generate_test_content
