@@ -1,7 +1,9 @@
 # encoding: UTF-8
 
-require 'bundler'
-Bundler.require
+require 'mojito'
+require 'extlib'
+require 'mongoid'
+require 'mongoid/tree'
 
 module Mojito
 	
