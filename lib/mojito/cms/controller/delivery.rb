@@ -20,7 +20,7 @@ module Mojito::CMS
 			when Component
 				if renderers = self.class.renderers[component.class]
 					ext = (@cms_extension || :html).to_sym
-					renderer = renderers[ext]
+					renderer = self.class.renderer_for component.class, ext
 					case component
 					when Page
 						if renderer
@@ -92,34 +92,24 @@ module Mojito::CMS
 		
 		module ClassMethods
 			
-			def rendering(component, options = {}, &block)
-				r = Renderer.new component, options, &block
-				renderers[component] ||= {}
-				renderers[component][options[:as].to_sym] = block
+			def rendering(component_type, options = {}, &block)
+				extension = options[:as]
+				renderers[component_type] ||= {}
+				renderers[component_type][extension.to_sym] = block
 			end
 			
 			def renderers
 				@renderers ||= {}
 			end
 			
-		end
-		
-		class Renderer
-			
-			def initialize(component, options = {}, &block)
-				@component = component
-				@options = options
-				@block = block
-			end
-			
-			attr_reader :component, :block
-			
-			def as
-				(@options[:as] || :html).to_sym
-			end
-			
-			def match?(request, response)
-				
+			def renderer_for(component_type, extension = :html)
+				if renderers[component_type] and renderers[component_type][extension.to_sym]
+					renderers[component_type][extension.to_sym]
+				elsif component_type.superclass
+					renderer_for component_type.superclass, extension
+				else
+					nil
+				end
 			end
 			
 		end
