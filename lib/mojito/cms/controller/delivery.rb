@@ -23,6 +23,7 @@ module Mojito::CMS
 					renderer = self.class.renderer_for component.class, ext
 					case component
 					when Page
+						content_type ext
 						if renderer
 							instance_exec component, &renderer
 						elsif component.respond_to?("to_#{ext.to_s}".to_sym)

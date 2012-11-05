@@ -38,7 +38,11 @@ class Delivery
 		end
 				
 	end
-			
+	
+	rendering Mojito::CMS::Page, as: :json do |page|
+		write page.to_json
+	end
+	
 	rendering PlainText, as: :html do |cmp|
 		template 'simple_plain_text.html.erb', cmp: cmp
 	end
@@ -48,7 +52,6 @@ class Delivery
 	end
 
 	rendering LandingPage, as: :html do |cmp|
-		content_type :html
 		template 'simple_landing_page.html.erb', cmp: cmp
 	end
 
